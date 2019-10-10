@@ -18,6 +18,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+// Functions needed in the modules.
 void set_ptr (void (*in)(void));
 
 #endif

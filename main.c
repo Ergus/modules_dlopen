@@ -18,9 +18,12 @@
 #include <stdio.h>
 #include <dlfcn.h>
 
+// Arrays for containers, this can be substituded with section attribute in some
+// architectures
 void (*fun_ptr[2])(void);
 int cont = 0;
 
+// Function to be called from the modules. It needs to be defined in the header.
 void set_ptr (void (*in)(void))
 {
 	printf ("Executing set_ptr\n");
@@ -33,8 +36,9 @@ int main ()
 	int i;
 	void (*loader) (void);   // pointer to loader
 	char filename[32];       // string filename
-	void (*modules[2]);      // Array of handlers
+	void (*modules[2]);      // Array of handlers (modules)
 
+	// Open the modules
 	for (i = 0; i < 2; ++i) {
 		sprintf (filename, "./libmodule%d.so", i + 1);
 		printf ("Call dlopen %s\n", filename);
@@ -44,10 +48,12 @@ int main ()
 		(*loader)();
 	}
 
+	// Call functions defined in the modules.
 	for (i = 0; i < 2; ++i)
 		(*fun_ptr[i])();
 
 
+	// Close the modules.
 	for (i = 0; i < 2; ++i) {
 		printf ("Call dlclose %d\n", i);
 		dlclose (modules[i]);

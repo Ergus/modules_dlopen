@@ -18,25 +18,29 @@
 #include <stdio.h>
 #include "main.h"
 
+// FUnction defined in the module. It will be assigned in the init_module
+// function.
 void print_lib (void)
 {
 	printf ("Printing from Library %s\n", MNAME);
 }
 
-
+// This will be executed before dlopen returns
 void __attribute__ ((constructor)) my_init(void)
 {
 	printf ("Load module %s\n", MNAME);
 }
 
+// This will be executed before dlclose returns.
 void __attribute__ ((destructor)) my_fini(void)
 {
 	printf ("Unload module %s\n", MNAME);
 }
 
-
+// Function to initialize the module.
+// Will be called after dlopen.
 void init_module ()
 {
 	printf ("Executing loader %s\n", MNAME);
-	set_ptr (&print_lib);
+	set_ptr (&print_lib);  // Call a function in the caller program.
 }

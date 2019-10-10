@@ -16,3 +16,7 @@ pointers to functions and variables defined in the module.
 It is very important the compilations options used in the Makefile to
 create the dynamic objects and to expose the caller program objects to
 the modules opened with dlopen.
+
+## Build
+
+Just run `make` and `make test`.
