@@ -13,17 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-files := main.x libmodule.so
+files:= main.x libmodule1.so libmodule2.so
 
 all: $(files)
 
-main.x: main.c
+%.x: main.c
 	$(CC) main.c -o main.x -ldl -rdynamic
 
-module.o: module.c
-	$(CC) -c -fpic $^
+%.o: module.c
+	$(CC) -DMNAME=\"$@\" -c -fpic $< -o $@
 
-libmodule.so: module.o
+lib%.so: %.o
 	$(CC) -shared $^ -o $@
 
 .PHONY: test clean

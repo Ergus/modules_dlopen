@@ -18,29 +18,40 @@
 #include <stdio.h>
 #include <dlfcn.h>
 
-void (*fun_ptr)(void) = NULL;
+void (*fun_ptr[2])(void);
+int cont = 0;
 
 void set_ptr (void (*in)(void))
 {
 	printf ("Executing set_ptr\n");
-	fun_ptr = in;
+	fun_ptr[cont++] = in;
 }
 
-void print_main ()
-{
-	printf ("Printing from main\n");
-}
 
 int main ()
 {
-	void (*loader) (void);
+	int i;
+	void (*loader) (void);   // pointer to loader
+	char filename[32];       // string filename
+	void (*modules[2]);      // Array of handlers
 
-	void *module = dlopen("./libmodule.so", RTLD_LAZY);
+	for (i = 0; i < 2; ++i) {
+		sprintf (filename, "./libmodule%d.so", i + 1);
+		printf ("Call dlopen %s\n", filename);
+		modules[i] = dlopen(filename, RTLD_LAZY);
 
-	loader = (void (*)(void)) dlsym (module, "init_module");
-	(*loader)();
+		loader = (void (*)(void)) dlsym (modules[i], "init_module");
+		(*loader)();
+	}
 
-	(*fun_ptr)();
+	for (i = 0; i < 2; ++i)
+		(*fun_ptr[i])();
+
+
+	for (i = 0; i < 2; ++i) {
+		printf ("Call dlclose %d\n", i);
+		dlclose (modules[i]);
+	}
 
 	return 0;
 }

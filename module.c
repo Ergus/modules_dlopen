@@ -20,12 +20,23 @@
 
 void print_lib (void)
 {
-	printf ("Printing from Library\n");
+	printf ("Printing from Library %s\n", MNAME);
 }
 
-void
-init_module ()
+
+void __attribute__ ((constructor)) my_init(void)
 {
-	printf ("Executing loader\n");
+	printf ("Load module %s\n", MNAME);
+}
+
+void __attribute__ ((destructor)) my_fini(void)
+{
+	printf ("Unload module %s\n", MNAME);
+}
+
+
+void init_module ()
+{
+	printf ("Executing loader %s\n", MNAME);
 	set_ptr (&print_lib);
 }
