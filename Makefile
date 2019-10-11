@@ -15,6 +15,8 @@
 
 files:= main.x libmodule1.so libmodule2.so
 
+.PHONY: all test clean
+
 all: $(files)
 
 %.x: main.c
@@ -26,7 +28,6 @@ all: $(files)
 lib%.so: %.o
 	$(CC) -shared $^ -o $@
 
-.PHONY: test clean
 
 test: $(files)
 	./main.x
