@@ -19,8 +19,11 @@ files:= main.x libmodule1.so libmodule2.so
 
 all: $(files)
 
-%.x: main.c
-	$(CC) main.c -o main.x -ldl -rdynamic
+%.x: main.o
+	$(CC) $< -o $@ -ldl -rdynamic
+
+main.o: main.c
+	$(CC) -c $< -o $@
 
 %.o: module.c
 	$(CC) -DMNAME=\"$@\" -c -fpic $< -o $@
